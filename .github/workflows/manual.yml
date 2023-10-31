@@ -63,13 +63,14 @@ jobs:
 
       - name: Pull Docker
         run: |
+          echo "${{ secrets.JHUMRU_GHCR_TOKEN }}" | docker login ghcr.io -u jhumru --password-stdin
           docker pull ghcr.io/jhumru/samachaar:latest
-          docker tag ghcr.io/jhumru/samachaar:latest scraper:latest
+          docker tag ghcr.io/jhumru/samachaar:latest samachaar:latest
         working-directory: ./
 
       - name: Run batch
         run: |
-          docker run -v ${{ github.workspace }}:/workspace -e ${{ secrets.ENV_TO }}=${{ github.event.inputs.to }} -e LOGURU_LEVEL=${{ github.event.inputs.loguru_level }} -e LOG_FILE=${{ secrets.LOG_FILE }} -e DB_PATH=${{ secrets.DB_PATH }} scraper ${{ env.BATCH_NAME }} ${{ secrets.MANY_DAYS }} ${{secrets.BATCH_START_SIGN }} ${{ github.event.inputs.batch_start }} ${{secrets.BATCH_END_SIGN }} ${{ github.event.inputs.batch_end }} --data-dir /workspace/${{ secrets.DEFAULT_FOLDER_NAME }} ${{secrets.SUB_BATCH_SIGN }} ${{ github.event.inputs.sub_batch_type }}
+          docker run -v ${{ github.workspace }}:/workspace -e ${{ secrets.ENV_TO }}=${{ github.event.inputs.to }} -e LOGURU_LEVEL=${{ github.event.inputs.loguru_level }} -e LOG_FILE=${{ secrets.LOG_FILE }} -e DB_PATH=${{ secrets.DB_PATH }} samachaar ${{ env.BATCH_NAME }} ${{ secrets.MANY_DAYS }} ${{secrets.BATCH_START_SIGN }} ${{ github.event.inputs.batch_start }} ${{secrets.BATCH_END_SIGN }} ${{ github.event.inputs.batch_end }} --data-dir /workspace/${{ secrets.DEFAULT_FOLDER_NAME }} ${{secrets.SUB_BATCH_SIGN }} ${{ github.event.inputs.sub_batch_type }}
         working-directory: ./
 
       - name: Get batch size
