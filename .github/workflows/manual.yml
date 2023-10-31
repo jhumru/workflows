@@ -1,4 +1,4 @@
-name: Scrape on Manual Trigger
+name: Get Batch Data
 
 on:
   workflow_dispatch:
@@ -45,7 +45,7 @@ on:
         default: ''
 
 jobs:
-  epaper_job:
+  batch_job:
     runs-on: ubuntu-latest
     # get the paper name from secrets
     steps:
@@ -83,6 +83,6 @@ jobs:
             apiToken: ${{ secrets.CF_API_TOKEN }}
             accountId: ${{ secrets.CF_ACCOUNT_ID }}
             preCommands: |
-                zip -r ${{ secrets.DEFAULT_FOLDER_NAME }}.zip ${{ github.workspace }}/${{ secrets.DEFAULT_FOLDER_NAME }}
+                zip -rq ${{ secrets.DEFAULT_FOLDER_NAME }}.zip ${{ github.workspace }}/${{ secrets.DEFAULT_FOLDER_NAME }}
                 
             command: r2 object put ${{ secrets.r2_bucket_name }}/${{ github.event.inputs.batch_start }}/${{ github.event.inputs.sub_batch_type }}/${{ secrets.DEFAULT_FOLDER_NAME }}.zip --file=${{ secrets.DEFAULT_FOLDER_NAME }}.zip
