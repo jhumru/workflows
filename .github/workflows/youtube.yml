@@ -38,5 +38,4 @@ jobs:
       with:
         token: ${{ secrets.GIST_PAT }}
         gist_id: ${{ secrets.GIST_ID }}
-        file_path: transcript.txt
-      working-directory: ${{ github.workspace }}
+        file_path: ${{ github.workspace }}/transcript.txt
