@@ -26,8 +26,9 @@ jobs:
         yt-dlp --write-auto-subs --skip-download --sub-lang en --sub-format vtt https://www.youtube.com/watch?v=${{ github.event.inputs.video_id }}
         ls
 
+    - uses: FedericoCarboni/setup-ffmpeg@v2
+
     - name: Convert VTT to SRT
-      uses: FedericoCarboni/setup-ffmpeg@v2
       run: |
         for file in *.vtt; do
           ffmpeg -i "$file" "${file%.vtt}.srt"
