@@ -27,6 +27,7 @@ jobs:
         ls
 
     - name: Convert VTT to SRT
+      uses: FedericoCarboni/setup-ffmpeg@v2
       run: |
         for file in *.vtt; do
           ffmpeg -i "$file" "${file%.vtt}.srt"
