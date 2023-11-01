@@ -34,7 +34,6 @@ jobs:
         pwd
       working-directory: ${{ github.workspace }}
 
-    - uses: actions/checkout@v3
     - name: Save
       uses: exuanbo/actions-deploy-gist@v1
       with:
