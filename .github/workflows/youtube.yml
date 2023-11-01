@@ -29,7 +29,9 @@ jobs:
       working-directory: ${{ github.workspace }}
 
     - name: Print Transcript
-      run: cat transcript.txt
+      run: |
+        cat transcript.txt
+        cp transcript.txt /home/
       working-directory: ${{ github.workspace }}
 
     - uses: actions/checkout@v3
@@ -38,4 +40,4 @@ jobs:
       with:
         token: ${{ secrets.GIST_PAT }}
         gist_id: ${{ secrets.GIST_ID }}
-        file_path: transcript.txt
+        file_path: /home/transcript.txt
