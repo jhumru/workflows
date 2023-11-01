@@ -22,7 +22,6 @@ jobs:
 
     - name: Install youtube-dl
       run: |
-        python3 -m pip install -U yt-dlp
         python3 -m pip install youtube-transcript-api
 
     - name: Download Transcript and Save to File
@@ -32,24 +31,3 @@ jobs:
     - name: Print Transcript
       run: cat transcript.txt
       working-directory: ${{ github.workspace }}
-
-    - name: Download Subtitles
-      run: |
-        yt-dlp --write-auto-subs --skip-download --sub-lang en --sub-format vtt https://www.youtube.com/watch?v=${{ github.event.inputs.video_id }}
-        ls
-
-    - uses: FedericoCarboni/setup-ffmpeg@v2
-
-    - name: Convert VTT to SRT
-      run: |
-        for file in *.vtt; do
-          ffmpeg -i "$file" "${file%.vtt}.srt"
-        done
-        ls
-
-    - name: Print Subtitles
-      run: |
-        for file in *.srt; do
-          echo "Contents of $file:"
-          cat "$file"
-        done
