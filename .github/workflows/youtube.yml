@@ -40,4 +40,4 @@ jobs:
       with:
         token: ${{ secrets.GIST_PAT }}
         gist_id: ${{ secrets.GIST_ID }}
-        file_path: /home/transcript.txt
+        file_path: transcript.txt
