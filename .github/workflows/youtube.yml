@@ -1,0 +1,42 @@
+name: Get Subtitles
+
+on:
+  workflow_dispatch:
+    inputs:
+      video_id:
+        description: 'YouTube Video ID'
+        required: true
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install youtube-dl
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y youtube-dl
+
+    - name: Download Subtitles
+      run: |
+        youtube-dl --write-sub --skip-download --sub-lang en --sub-format vtt https://www.youtube.com/watch?v=${{ github.event.inputs.video_id }}
+        ls
+
+    - name: Convert VTT to SRT
+      run: |
+        for file in *.vtt; do
+          ffmpeg -i "$file" "${file%.vtt}.srt"
+        done
+        ls
+
+    - name: Print Subtitles
+      run: |
+        for file in *.srt; do
+          echo "Contents of $file:"
+          cat "$file"
+        done
