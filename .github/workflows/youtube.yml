@@ -31,3 +31,14 @@ jobs:
     - name: Print Transcript
       run: cat transcript.txt
       working-directory: ${{ github.workspace }}
+
+    - name: Save Transcript
+      env:
+        GH_TOKEN: ${{ secrets.GIST_PAT }}
+      run: |
+        gist_name="transcript_${{ github.event.inputs.video_id }}.txt"
+        gist_description="Transcript for video ${{ github.event.inputs.video_id }}"
+        response=$(curl -H "Authorization: token $GH_TOKEN" \
+                       -X POST -d "{\"files\": {\"$gist_name\": {\"content\": \"$(<transcript.txt)\"}}, \"description\": \"$gist_description\", \"public\": false}" \
+                       https://api.github.com/gists)
+      working-directory: ${{ github.workspace }}
