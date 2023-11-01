@@ -11,6 +11,9 @@ jobs:
   download:
     runs-on: ubuntu-latest
     steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v3
       
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -20,7 +23,16 @@ jobs:
     - name: Install youtube-dl
       run: |
         python3 -m pip install -U yt-dlp
+        python3 -m pip install youtube-transcript-api
 
+    - name: Download Transcript and Save to File
+      run: python download_transcript.py "${{ github.event.inputs.video_id }}"
+      working-directory: ${{ github.workspace }}
+
+    - name: Print Transcript
+      run: cat transcript.txt
+      working-directory: ${{ github.workspace }}
+      
     - name: Download Subtitles
       run: |
         yt-dlp --write-auto-subs --skip-download --sub-lang en --sub-format vtt https://www.youtube.com/watch?v=${{ github.event.inputs.video_id }}
