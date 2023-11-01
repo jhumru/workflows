@@ -19,12 +19,11 @@ jobs:
 
     - name: Install youtube-dl
       run: |
-        sudo apt-get update
-        sudo apt-get install -y youtube-dl
+        python3 -m pip install -U yt-dlp
 
     - name: Download Subtitles
       run: |
-        youtube-dl --write-sub --skip-download --sub-lang en --sub-format vtt https://www.youtube.com/watch?v=${{ github.event.inputs.video_id }}
+        yt-dlp --write-sub --skip-download --sub-lang en --sub-format vtt https://www.youtube.com/watch?v=${{ github.event.inputs.video_id }}
         ls
 
     - name: Convert VTT to SRT
