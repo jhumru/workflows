@@ -66,16 +66,15 @@ jobs:
           echo "${{ secrets.JHUMRU_GHCR_TOKEN }}" | docker login ghcr.io -u jhumru --password-stdin
           docker pull ghcr.io/jhumru/samachaar:latest
           docker tag ghcr.io/jhumru/samachaar:latest samachaar:latest
-        working-directory: ./
+        
 
       - name: Run batch
         run: |
           docker run -v ${{ github.workspace }}:/workspace -e ${{ secrets.ENV_TO }}=${{ github.event.inputs.to }} -e LOGURU_LEVEL=${{ github.event.inputs.loguru_level }} -e LOG_FILE=${{ secrets.LOG_FILE }} -e DB_PATH=${{ secrets.DB_PATH }} samachaar ${{ env.BATCH_NAME }} ${{ secrets.MANY_DAYS }} ${{secrets.BATCH_START_SIGN }} ${{ github.event.inputs.batch_start }} ${{secrets.BATCH_END_SIGN }} ${{ github.event.inputs.batch_end }} --data-dir /workspace/${{ secrets.DEFAULT_FOLDER_NAME }} ${{secrets.SUB_BATCH_SIGN }} ${{ github.event.inputs.sub_batch_type }}
-        working-directory: ./
+        
 
       - name: Get batch size
         run: du -sh ${{ github.workspace }}/${{ secrets.DEFAULT_FOLDER_NAME }}
-        working-directory: ./
         
       - name: save batch
         uses: cloudflare/wrangler-action@v3
@@ -83,6 +82,6 @@ jobs:
             apiToken: ${{ secrets.CF_API_TOKEN }}
             accountId: ${{ secrets.CF_ACCOUNT_ID }}
             preCommands: |
-                zip -rq ${{ secrets.DEFAULT_FOLDER_NAME }}.zip ${{ github.workspace }}/${{ secrets.DEFAULT_FOLDER_NAME }}
+                zip -rq ${{ secrets.DEFAULT_FOLDER_NAME }}.zip ${{ secrets.DEFAULT_FOLDER_NAME }}
                 
             command: r2 object put ${{ secrets.r2_bucket_name }}/${{ github.event.inputs.batch_start }}/${{ github.event.inputs.sub_batch_type }}/${{ secrets.DEFAULT_FOLDER_NAME }}.zip --file=${{ secrets.DEFAULT_FOLDER_NAME }}.zip
