@@ -64,8 +64,8 @@ jobs:
       - name: Pull Docker
         run: |
           echo "${{ secrets.JHUMRU_GHCR_TOKEN }}" | docker login ghcr.io -u jhumru --password-stdin
-          docker pull ghcr.io/jhumru/samachaar:latest
-          docker tag ghcr.io/jhumru/samachaar:latest samachaar:latest
+          docker pull ghcr.io/jhumru/samachaar:${{ vars.SAMACHAAR_DOCKER_TAG }}
+          docker tag ghcr.io/jhumru/samachaar:${{ vars.SAMACHAAR_DOCKER_TAG }} samachaar:${{ vars.SAMACHAAR_DOCKER_TAG }}
         
 
       - name: Run batch
