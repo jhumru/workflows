@@ -76,11 +76,16 @@ jobs:
         run: du -sh ${{ github.workspace }}/${{ secrets.DEFAULT_FOLDER_NAME }}
         
       - name: save batch
-        uses: cloudflare/wrangler-action@v3
-        with:
-            apiToken: ${{ secrets.CF_API_TOKEN }}
-            accountId: ${{ secrets.CF_ACCOUNT_ID }}
-            preCommands: |
-                zip -rq ${{ secrets.DEFAULT_FOLDER_NAME }}.zip ${{ secrets.DEFAULT_FOLDER_NAME }}
-                
-            command: r2 object put ${{ secrets.r2_bucket_name }}/${{ github.event.inputs.batch_start }}/${{ github.event.inputs.sub_batch_type }}/${{ secrets.DEFAULT_FOLDER_NAME }}.zip --file=${{ secrets.DEFAULT_FOLDER_NAME }}.zip
+        run: |
+          zip -rq ${{ secrets.DEFAULT_FOLDER_NAME }}.zip ${{ secrets.DEFAULT_FOLDER_NAME }}
+          curl https://rclone.org/install.sh | sudo bash
+          mkdir -p ~/.config/rclone
+          echo "[s3]
+          type = s3
+          provider = Other
+          env_auth = false
+          access_key_id = ${{ secrets.R2_ACCESS_KEY_ID }}
+          secret_access_key = ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          endpoint = ${{ secrets.R2_ENDPOINT }}
+          region = auto" > ~/.config/rclone/rclone.conf
+          rclone copyto ${{ secrets.DEFAULT_FOLDER_NAME }}.zip s3:${{ secrets.r2_bucket_name }}/${{ github.event.inputs.batch_start }}/${{ github.event.inputs.sub_batch_type }}/${{ secrets.DEFAULT_FOLDER_NAME }}.zip --retries 5 --low-level-retries 10 --retry-delay 2s
