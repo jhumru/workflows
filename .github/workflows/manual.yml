@@ -88,4 +88,4 @@ jobs:
           secret_access_key = ${{ secrets.R2_SECRET_ACCESS_KEY }}
           endpoint = ${{ secrets.R2_ENDPOINT }}
           region = auto" > ~/.config/rclone/rclone.conf
-          rclone copyto ${{ secrets.DEFAULT_FOLDER_NAME }}.zip s3:${{ secrets.r2_bucket_name }}/${{ github.event.inputs.batch_start }}/${{ github.event.inputs.sub_batch_type }}/${{ secrets.DEFAULT_FOLDER_NAME }}.zip --retries 5 --low-level-retries 10 --retry-delay 2s
+          rclone copyto ${{ secrets.DEFAULT_FOLDER_NAME }}.zip s3:${{ secrets.r2_bucket_name }}/${{ github.event.inputs.batch_start }}/${{ github.event.inputs.sub_batch_type }}/${{ secrets.DEFAULT_FOLDER_NAME }}.zip --retries 5 --low-level-retries 10 --retries-sleep 2s
