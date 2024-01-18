@@ -11,14 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     # get the paper name from secrets
     steps:        
-
-      - name: Run batch
+        
+      - name: save
         run: |
           wget ${{ github.event.inputs.pdf_url }}
-          
-        
-      - name: save batch
-        run: |
           curl https://rclone.org/install.sh | sudo bash
           url=${{ github.event.inputs.pdf_url }}
           pdf_name=$(basename "$url")
@@ -32,4 +28,4 @@ jobs:
           endpoint = ${{ secrets.R2_ENDPOINT_DUMP }}
           no_check_bucket = true
           region = auto" > ~/.config/rclone/rclone.conf
-          rclone copyto pdf_name s3:${{ secrets.r2_bucket_name_dump }}/up_vidhansabha/ --retries 5 --low-level-retries 10 --retries-sleep 2s
+          rclone copyto $pdf_name s3:${{ secrets.r2_bucket_name_dump }}/up_vidhansabha/ --retries 5 --low-level-retries 10 --retries-sleep 2s
