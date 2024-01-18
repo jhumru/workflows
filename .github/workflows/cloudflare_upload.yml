@@ -1,0 +1,35 @@
+name: Cloudflare Upload
+
+on:
+  workflow_dispatch:
+    inputs:
+      pdf_url:
+        description: 'PDF URL'
+        
+jobs:
+  batch_job:
+    runs-on: ubuntu-latest
+    # get the paper name from secrets
+    steps:        
+
+      - name: Run batch
+        run: |
+          wget ${{ github.event.inputs.pdf_url }}
+          
+        
+      - name: save batch
+        run: |
+          curl https://rclone.org/install.sh | sudo bash
+          url=${{ github.event.inputs.pdf_url }}
+          pdf_name=$(basename "$url")
+          mkdir -p ~/.config/rclone
+          echo "[s3]
+          type = s3
+          provider = Other
+          env_auth = false
+          access_key_id = ${{ secrets.R2_ACCESS_KEY_ID_DUMP }}
+          secret_access_key = ${{ secrets.R2_SECRET_ACCESS_KEY_DUMP }}
+          endpoint = ${{ secrets.R2_ENDPOINT_DUMP }}
+          no_check_bucket = true
+          region = auto" > ~/.config/rclone/rclone.conf
+          rclone copyto pdf_name s3:${{ secrets.r2_bucket_name_dump }}/up_vidhansabha/ --retries 5 --low-level-retries 10 --retries-sleep 2s
