@@ -28,4 +28,4 @@ jobs:
           endpoint = ${{ secrets.R2_ENDPOINT_DUMP }}
           no_check_bucket = true
           region = auto" > ~/.config/rclone/rclone.conf
-          rclone copyto $pdf_name s3:${{ secrets.r2_bucket_name_dump }}/up_vidhansabha/ --retries 5 --low-level-retries 10 --retries-sleep 2s
+          rclone copyto $pdf_name s3:${{ secrets.r2_bucket_name_dump }}/up_vidhansabha/$pdf_name --retries 5 --low-level-retries 10 --retries-sleep 2s
